@@ -12,11 +12,11 @@ int	ft_load_images(t_data *data)
 	props = (t_map_props *)ft_calloc(sizeof(props), 1);
 	if (!props)
 		return (0);
-	props->coin = mlx_xpm_file_to_image(data->mlx_ptr, "./textures/bone_64x64-overlay.xpm", &x, &y);
+	props->coin = mlx_xpm_file_to_image(data->mlx_ptr, "./textures/monster_64x64-overlay.xpm", &x, &y);
 	props->path = mlx_xpm_file_to_image(data->mlx_ptr, "./textures/dirt_path_64x64-overlay.xpm", &x, &y);
 	props->wall = mlx_xpm_file_to_image(data->mlx_ptr, "./textures/bushes_64x64-overlay.xpm", &x, &y);
-	props->packman = mlx_xpm_file_to_image(data->mlx_ptr, "./textures/dog_64x64-overlay.xpm", &x, &y);
-	props->exit = mlx_xpm_file_to_image(data->mlx_ptr, "./textures/doghouse_64x64-overlay.xpm", &x, &y);
+	props->packman = mlx_xpm_file_to_image(data->mlx_ptr, "./textures/saitama_64x64-overlay.xpm", &x, &y);
+	props->exit = mlx_xpm_file_to_image(data->mlx_ptr, "./textures/food_64x64-overlay.xpm", &x, &y);
 	data->props = props;
 	// printf("here from load imgs\n");
 	return (1);

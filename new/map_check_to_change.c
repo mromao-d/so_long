@@ -49,7 +49,6 @@ int	ft_nb_exits(char **map_char, t_map *map_set)
 	}
 	if (exits != 1)
 		return (0);
-	// map_set->map_1_exit = 1;
 	return (1);
 }
 
@@ -89,12 +88,18 @@ int	map_is_rectangular(char **map_char)
 {
 	int	i;
 	int rows;
+	int	height;
 
 	rows = 0;
-	i = ft_strlen(map_char[rows]);
-	while (map_char[rows])
+	i = ft_strlen(map_char[0]);
+	while (map_char[rows] != 0)
 	{
-		if (ft_strlen(map_char[rows]) != i)
+		if (map_char[rows + 1] == 0)
+		{
+			if (ft_strlen(map_char[rows]) + 1 != i)
+				return (0);
+		}
+		else if (ft_strlen(map_char[rows]) != i)
 			return (0);
 		rows++;
 	}

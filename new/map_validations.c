@@ -7,7 +7,7 @@ int	ft_map_name(char *argv)
 	i = ft_strlen(argv);
 	if (!(argv[i - 1] == 'r' && argv[i-2] == 'e' && argv[i-3] == 'b' && argv[i-4] == '.'))
 	{	
-		ft_printf("ERROR\nWrong map name. Map name should be maps/<map_name>.ber");
+		ft_printf("ERROR\nwrong filename");
 		return (0);
 	}
 	if (ft_strncmp(argv, "maps/", 5) != 0)
@@ -27,7 +27,7 @@ int	ft_check_args(int argc, char *argv)
 	fd = open(argv, O_RDONLY);
 	if (fd < 0)
 	{
-		// ft_printf("Wrong filename!\n");
+		ft_printf("ERROR!\nWrong filename does not exist!\n");
 		return (0);
 	}
 	close (fd);

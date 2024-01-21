@@ -48,7 +48,7 @@ int	ft_close_window(t_data *data)
 
 int	ft_deal_key(int key, t_data *data)
 {
-	printf("%d\n", key);
+	// printf("%d\n", key);
 	if (key == ESC)
 		ft_close_handler(data);
 	if (key == RIGHT || key == RIGHT_)
@@ -107,7 +107,8 @@ int	main(int argc, char **argv)
 	if (!win)
 		return (0);
 	win->map = ft_init_map(argv[1]);
-	win->map->nb_img=0;
+	win->nbr_moves = 0;
+	win->map->nb_img = 0;
 	if (!win->map)
 	{
 		return (free(win), 0);

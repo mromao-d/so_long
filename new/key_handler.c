@@ -8,8 +8,8 @@ int	ft_coin_pls_end(t_data *data, int y, int x)
 		return (0);
 	if (data->map->map[y][x] == 'E' && data->map->nb_coins == 0)
 	{
+		printf("You won mate! %d moves!", data->nbr_moves);
 		ft_close_handler(data);
-		printf("You won mate!");
 	}
 	return (1);
 }
@@ -23,6 +23,7 @@ void	ft_mv_down(t_data *data)
 	pos_y = data->map->p_pos_y;
 	if ((pos_y + 1 < data->map->y) && (data->map->map[pos_y + 1][pos_x] != '1' ))
 	{
+		ft_printf("Total of moves: %d\n", data->nbr_moves++ + 1);
 		if (!(ft_coin_pls_end(data, pos_y + 1, pos_x)))
 			return ;
 		data->map->p_pos_y++;
@@ -43,6 +44,7 @@ void	ft_mv_up(t_data *data)
 	pos_y = data->map->p_pos_y;
 	if ((pos_y - 1 > 0) && (data->map->map[pos_y - 1][pos_x] != '1' ))
 	{
+		ft_printf("Total of moves: %d\n", data->nbr_moves++ + 1);
 		if (!(ft_coin_pls_end(data, pos_y - 1, pos_x)))
 			return ;
 		data->map->p_pos_y--;
@@ -63,6 +65,7 @@ void	ft_mv_left(t_data *data)
 	pos_y = data->map->p_pos_y;
 	if ((pos_x - 1 > 0) && (data->map->map[pos_y][pos_x - 1] != '1' ))
 	{
+		ft_printf("Total of moves: %d\n", data->nbr_moves++ + 1);
 		if (!(ft_coin_pls_end(data, pos_y, pos_x - 1)))
 			return ;
 		data->map->p_pos_x--;
@@ -83,6 +86,7 @@ void	ft_mv_right(t_data *data)
 	pos_y = data->map->p_pos_y;
 	if ((pos_x + 1 < data->map->x - 1) && (data->map->map[pos_y][pos_x + 1] != '1' ))
 	{
+		ft_printf("Total of moves: %d\n", data->nbr_moves++ + 1);
 		if (!(ft_coin_pls_end(data, pos_y, pos_x + 1)))
 			return ;
 		data->map->p_pos_x++;
