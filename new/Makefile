@@ -1,64 +1,40 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: mromao-d <mromao-d@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/01/07 16:29:31 by mromao-d          #+#    #+#              #
-#    Updated: 2024/01/07 16:32:40 by mromao-d         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME = so_long
-SRC = *.c
+SRC = $(wildcard *.c)
+OBJ = $(wildcard *.o)
+CC = cc
+FLAGS = -I /usr/X11/include -g -L /usr/X11/lib -l mlx -framework OpenGL -framework AppKit
 LIBFT = libft/*.c
 LIBFT_DIR = libft/
-# PRINTF = printf/*.c
-# PRINTF_DIR = printf/
-MLX_LIB_DIR = .mlx/
-MLX_INCLUDE = -I mlx
-MLX_FLAGS = -L$(MLX_LIB_DIR) -lmlx -L/usr/lib -lXext -lX11 -lm -lz
 
-OBJS = $(SRC:.c=.o)
-
-CFLAGS = -Wall -Wextra -Werror -g
-
-CC = cc
+RM = rm -f
 
 all: $(NAME)
 
-%.o: %.c
-		$(CC) -I/usr/include -Imlx -O3 -c $< -o $@
-
-$(NAME): $(OBJS)
-		@$(MAKE) -C $(MLX_LIB_DIR)
-		@$(MAKE) -C $(LIBFT_DIR)
-		@$(CC) $(OBJ)$(CFLAGS) $(SRC) libft/libft.a $(MLX_FLAGS)  -o $(NAME)
-#		@$(CC) $(OBJ)$(CFLAGS) $(SRC) libft/libft.a $(MLX_FLAGS)  -o $(NAME) -fsanitize=address
-
-valgrind: $(OBJS)
-	@$(MAKE) -C $(MLX_LIB_DIR)
+$(NAME):
 	@$(MAKE) -C $(LIBFT_DIR)
-	@$(CC) $(OBJ)$(CFLAGS) $(SRC) libft/libft.a $(MLX_FLAGS)  -o $(NAME)
-	valgrind --leak-check=full --show-leak-kinds=all ./$(NAME) "maps/test_maps/42.fdf"
+	$(CC) $(FLAGS) $(SRC) libft/libft.a -o $(NAME)
 
+run: 
+	$(CC) $(FLAGS) $(SRC) libft/libft.a -o $(NAME)
+#	./$(NAME) "maps/test_maps/42.fdf"
+#	./$(NAME) "maps/test_maps/20-60.fdf"
+#	./$(NAME) "maps/test_maps/mars.fdf"
+	./$(NAME) "maps/test_maps/test.fdf"
 
-run: $(OBJS)
-	@$(MAKE) -C $(MLX_LIB_DIR)
-	@$(MAKE) -C $(LIBFT_DIR)
-	@$(CC) $(OBJ)$(CFLAGS) $(SRC) libft/libft.a $(MLX_FLAGS)  -o $(NAME) -fsanitize=address
-	./$(NAME)
-
+lldb: 
+	$(CC) $(FLAGS) $(SRC) libft/libft.a  -o $(NAME)
+#	./$(NAME) "maps/test_maps/42.fdf"
+#	./$(NAME) "maps/test_maps/20-60.fdf"
+#	./$(NAME) "maps/test_maps/mars.fdf"
+	lldb ./$(NAME) "maps/test_maps/test.fdf"
 
 clean:
-	rm -rf $(OBJS)
-	@$(MAKE) -C $(MLX_LIB_DIR) clean
+	$(RM) -rf $(OBJ)
 	@$(MAKE) -C $(LIBFT_DIR) clean
 
-fclean: clean
-	rm -rf $(NAME)
-	@$(MAKE) -C $(MLX_LIB_DIR) clean
+fclean:
+	$(RM) -rf *.a
+	$(RM) -rf $(NAME)
 	@$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all

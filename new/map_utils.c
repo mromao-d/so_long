@@ -69,36 +69,117 @@ char	**ft_read_file(char *file_name)
 		i++;
 	}
 	out[i] = 0;
+	// ft_print_map(out);
 	close(fd);
 	return (out);
 }
 
-// 
-t_map	*map_init(char *argv)
+// validate if map has an reachable exit. Paints the canvas paths that has passed with a wall
+// and continues till it finds an exit. If it finds the exit, it marks the "has_exit" as 1.
+void	ft_validate_map(t_map *map, char **fake_map, int p_pos_y, int p_pos_x)
 {
-	t_map	*map_set;
-	char	**map_canvas;
-
-	map_set = (t_map *)ft_calloc(1, sizeof(t_map));
-	if (!map_set)
-		return (0);
-	map_set->map = map_reader(argv);
-	if (!map_set->map)
+	if (!(p_pos_y >= 0 && p_pos_y < (map->y -1) && p_pos_x >= 0 && p_pos_x < ((map->x) - 1)))
+		return ;
+	// printf("Here from validate map\n");
+	if (map->map[p_pos_y][p_pos_x] == '1')
 	{
-		free(map_set);
-		free(map_set->map);
+		// printf("blocked here!\n");
+		return ;
+	}
+	// printf("Here from validate map 2\n");
+	if (fake_map[p_pos_y][p_pos_x] == '1')
+		return ;
+	if (map->map[p_pos_y][p_pos_x] == 'E')
+	{
+		map->has_exit = 1;
+		return ;
+	}
+	if (map->map[p_pos_y][p_pos_x] == 'C' && fake_map[p_pos_y][p_pos_x] != '1')
+		map->nb_coins++;
+	fake_map[p_pos_y][p_pos_x] = '1';
+	ft_validate_map(map, fake_map, p_pos_y + 1, p_pos_x);
+	ft_validate_map(map, fake_map, p_pos_y, p_pos_x + 1);
+	ft_validate_map(map, fake_map, p_pos_y - 1, p_pos_x);
+	ft_validate_map(map, fake_map, p_pos_y, p_pos_x - 1);
+	return ;
+}
+
+/* Funtion to create a (char **) with the same size as (char **) map. */
+char	**ft_map_clone(int y, int x)
+{
+	char	**map;
+	int		i;
+
+	map = (char **)ft_calloc(y, sizeof(char *));
+	i = 0;
+	while (i < y)
+	{
+		map[i] = (char *)ft_calloc(x + 1, sizeof(char));
+		i++;
+	}
+	return (map);
+}
+
+void	ft_print_map(char **map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			printf("%c", map[i][j]);
+			j++;
+		}
+		// printf("\n");
+		i++;
+	}
+}
+
+t_map	*ft_init_map(char *argv)
+{
+	t_map	*map;
+	char	**map_clone;
+
+	map = (t_map *)ft_calloc(1, sizeof(t_map));
+	if (!map)
+		return (0);
+	map->map = ft_read_file(argv);
+	map->argv = ft_strdup(argv);
+	printf("%s\n", map->argv);
+	// ft_print_map(map->map);
+	if (!map->map)
+	{
+		free(map);
+		free(map->map);
 		return (0);
 	}
-	map_set->y = ft_count_lines(argv);
-	map_set->x = ft_strlen(map_set->map[0]);
-	if (!map_checklist(map_set->map, map_set))
+	map->y = ft_get_height(argv);
+	map->x = ft_strlen(map->map[0]);
+	printf("y is: %d, x is : %d\n", map->y, map->x);
+	if (!ft_map_checklist(map->map, map, argv))
 		return (0);
-	map_set->number_of_c = number_of_c(map_set->map);
-	map_canvas = map_blank(map_set->y, map_set->x);
-	map_goal_possible(map_set, map_canvas, map_set->p_pos_y, map_set->p_pos_x);
-	free_map(map_canvas, map_set->y);
-	if (!(map_set->map_goal_exit)
-		|| !(map_set->map_goal_c == map_set->number_of_c))
-		return (free_t_map(map_set, 'e'));
-	return (map_set);
+	map->all_coins = ft_has_coins(map->map);
+	printf("coins are: %d\n", map->all_coins);
+	if (map->all_coins < 1)
+	{	
+		printf("No coins");
+		return(0);
+	}
+	// ft_print_map(map->map);
+	// printf("%d\n", map->all_coins);
+	map_clone = ft_map_clone(map->y, map->x);
+	printf("p_pos_y is:	%d	and p_pos_x is:%d\n", map->p_pos_y, map->p_pos_x);
+	ft_validate_map(map, map_clone, map->p_pos_y, map->p_pos_x);
+	// ft_free_map(map_clone, argv);
+	// free_map(map_file, map->y);
+	// if (!(map->has_exit)
+	// 	|| !(map->nb_coins == map->all_coins))
+	// 	return (free_t_map(map, 'e'));
+	// ft_print_map(map->map);
+	// printf("here from init map\n");
+	return (map);
 }
